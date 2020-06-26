@@ -1,6 +1,4 @@
-import React from 'react';
-import CreateReactClass from 'create-react-class';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import isTwelveHourTime from './lib/is-twelve-hour-time';
 import replaceCharAt from './lib/replace-char-at';
@@ -15,20 +13,25 @@ const SILHOUETTE = '00:00:00:000 AM';
 // isSeparator :: Char -> Bool
 const isSeparator = char => /[:\s]/.test(char);
 
-var TimeInput = CreateReactClass({
-  getInitialState() {
-    return {};
-  },
-  getDefaultProps() {
-    return {
-      value: '12:00 AM'
-    };
-  },
-  propTypes: {
-    className: PropTypes.string,
-    value: PropTypes.string,
-    onChange: PropTypes.func
-  },
+class TimeInput extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {};
+
+    this.format = this.format.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
+    this.handleEscape = this.handleEscape.bind(this);
+    this.handleTab = this.handleTab.bind(this);
+    this.handleArrows = this.handleArrows.bind(this);
+    this.silhouette = this.silhouette.bind(this);
+    this.handleBackspace = this.handleBackspace.bind(this);
+    this.handleForwardSpace = this.handleForwardSpace.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.onChange = this.onChange.bind(this);
+  }
+
   render() {
     var className = 'TimeInput';
     if (this.props.className) {
@@ -47,27 +50,27 @@ var TimeInput = CreateReactClass({
         onKeyDown={this.handleKeyDown}
       />
     );
-  },
+  }
   format(val) {
     if (isTwelveHourTime(val)) val = val.replace(/^00/, '12');
     return val.toUpperCase();
-  },
+  }
   componentDidMount() {
     this.mounted = true;
-  },
+  }
   componentWillUnmount() {
     this.mounted = false;
-  },
+  }
   componentDidUpdate() {
     var index = this.state.caretIndex;
     if (index || index === 0) caret.set(this.input, index);
-  },
+  }
   handleBlur() {
     if (this.mounted) this.setState({ caretIndex: null });
-  },
+  }
   handleEscape() {
     if (this.mounted) this.input.blur();
-  },
+  }
   handleTab(event) {
     var start = caret.start(this.input);
     var value = this.props.value;
@@ -84,7 +87,7 @@ var TimeInput = CreateReactClass({
     var index = groupId * 3;
     if (this.props.value.charAt(index) === ' ') index++;
     if (this.mounted) this.setState({ caretIndex: index });
-  },
+  }
   handleArrows(event) {
     event.preventDefault();
     var start = caret.start(this.input);
@@ -96,10 +99,10 @@ var TimeInput = CreateReactClass({
     }
     value = adder(value, getGroupId(start), amount);
     this.onChange(value, start);
-  },
+  }
   silhouette() {
     return this.props.value.replace(/\d/g, (val, i) => SILHOUETTE.charAt(i));
-  },
+  }
   handleBackspace(event) {
     event.preventDefault();
     var start = caret.start(this.input);
@@ -122,7 +125,7 @@ var TimeInput = CreateReactClass({
     }
     if (value.charAt(start - 1) === ':') start--;
     this.onChange(value, start);
-  },
+  }
   handleForwardSpace(event) {
     event.preventDefault();
     var start = caret.start(this.input);
@@ -145,7 +148,7 @@ var TimeInput = CreateReactClass({
     }
     if (value.charAt(start) === ':') start++;
     this.onChange(value, start);
-  },
+  }
   handleKeyDown(event) {
     switch (event.which) {
     case 9: // Tab
@@ -162,7 +165,7 @@ var TimeInput = CreateReactClass({
     default:
       break;
     }
-  },
+  }
   handleChange(event) {
     let value = this.props.value;
     let newValue = this.input.value;
@@ -208,12 +211,12 @@ var TimeInput = CreateReactClass({
       var caretIndex = this.props.value.length - (newValue.length - end);
       if (this.mounted) this.setState({ caretIndex: caretIndex });
     }
-  },
+  }
   onChange(str, caretIndex) {
     if (this.props.onChange) this.props.onChange(this.format(str));
     if (this.mounted && typeof caretIndex === 'number')
       this.setState({ caretIndex: caretIndex });
   }
-});
+}
 
 export default TimeInput;
