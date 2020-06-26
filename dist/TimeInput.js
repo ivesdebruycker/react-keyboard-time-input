@@ -1,6 +1,10 @@
-import React from 'react';
-import CreateReactClass from 'create-react-class';
-import PropTypes from 'prop-types';
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+import React, { Component } from 'react';
 
 import isTwelveHourTime from './lib/is-twelve-hour-time';
 import replaceCharAt from './lib/replace-char-at';
@@ -18,65 +22,77 @@ var isSeparator = function isSeparator(char) {
   );
 };
 
-var TimeInput = CreateReactClass({
-  getInitialState: function getInitialState() {
-    return {};
-  },
-  getDefaultProps: function getDefaultProps() {
-    return {
-      value: '12:00 AM'
-    };
-  },
+var TimeInput = function (_Component) {
+  _inherits(TimeInput, _Component);
 
-  propTypes: {
-    className: PropTypes.string,
-    value: PropTypes.string,
-    onChange: PropTypes.func
-  },
-  render: function render() {
-    var _this = this;
+  function TimeInput(props) {
+    _classCallCheck(this, TimeInput);
+
+    var _this = _possibleConstructorReturn(this, _Component.call(this, props));
+
+    _this.state = {};
+
+    _this.format = _this.format.bind(_this);
+    _this.handleBlur = _this.handleBlur.bind(_this);
+    _this.handleEscape = _this.handleEscape.bind(_this);
+    _this.handleTab = _this.handleTab.bind(_this);
+    _this.handleArrows = _this.handleArrows.bind(_this);
+    _this.silhouette = _this.silhouette.bind(_this);
+    _this.handleBackspace = _this.handleBackspace.bind(_this);
+    _this.handleForwardSpace = _this.handleForwardSpace.bind(_this);
+    _this.handleKeyDown = _this.handleKeyDown.bind(_this);
+    _this.handleChange = _this.handleChange.bind(_this);
+    _this.onChange = _this.onChange.bind(_this);
+    return _this;
+  }
+
+  TimeInput.prototype.render = function render() {
+    var _this2 = this;
 
     var className = 'TimeInput';
     if (this.props.className) {
       className += ' ' + this.props.className;
     }
-    return React.createElement(
-      'div',
-      { className: className },
-      React.createElement('input', {
-        className: 'TimeInput-input',
-        ref: function ref(input) {
-          _this.input = input;
-        },
-        type: 'text',
-        value: this.format(this.props.value),
-        onChange: this.handleChange,
-        onBlur: this.handleBlur,
-        onKeyDown: this.handleKeyDown
-      })
-    );
-  },
-  format: function format(val) {
+    return React.createElement('input', {
+      className: className + ' TimeInput-input',
+      ref: function ref(input) {
+        _this2.input = input;
+      },
+      type: 'text',
+      value: this.format(this.props.value),
+      onChange: this.handleChange,
+      onBlur: this.handleBlur,
+      onKeyDown: this.handleKeyDown
+    });
+  };
+
+  TimeInput.prototype.format = function format(val) {
     if (isTwelveHourTime(val)) val = val.replace(/^00/, '12');
     return val.toUpperCase();
-  },
-  componentDidMount: function componentDidMount() {
+  };
+
+  TimeInput.prototype.componentDidMount = function componentDidMount() {
     this.mounted = true;
-  },
-  componentWillUnmount: function componentWillUnmount() {
+  };
+
+  TimeInput.prototype.componentWillUnmount = function componentWillUnmount() {
     this.mounted = false;
-  },
-  componentDidUpdate: function componentDidUpdate() {
+  };
+
+  TimeInput.prototype.componentDidUpdate = function componentDidUpdate() {
     var index = this.state.caretIndex;
     if (index || index === 0) caret.set(this.input, index);
-  },
-  handleBlur: function handleBlur() {
+  };
+
+  TimeInput.prototype.handleBlur = function handleBlur() {
     if (this.mounted) this.setState({ caretIndex: null });
-  },
-  handleEscape: function handleEscape() {
+  };
+
+  TimeInput.prototype.handleEscape = function handleEscape() {
     if (this.mounted) this.input.blur();
-  },
-  handleTab: function handleTab(event) {
+  };
+
+  TimeInput.prototype.handleTab = function handleTab(event) {
     var start = caret.start(this.input);
     var value = this.props.value;
     var groups = getGroups(value);
@@ -92,8 +108,9 @@ var TimeInput = CreateReactClass({
     var index = groupId * 3;
     if (this.props.value.charAt(index) === ' ') index++;
     if (this.mounted) this.setState({ caretIndex: index });
-  },
-  handleArrows: function handleArrows(event) {
+  };
+
+  TimeInput.prototype.handleArrows = function handleArrows(event) {
     event.preventDefault();
     var start = caret.start(this.input);
     var value = this.props.value;
@@ -104,13 +121,15 @@ var TimeInput = CreateReactClass({
     }
     value = adder(value, getGroupId(start), amount);
     this.onChange(value, start);
-  },
-  silhouette: function silhouette() {
+  };
+
+  TimeInput.prototype.silhouette = function silhouette() {
     return this.props.value.replace(/\d/g, function (val, i) {
       return SILHOUETTE.charAt(i);
     });
-  },
-  handleBackspace: function handleBackspace(event) {
+  };
+
+  TimeInput.prototype.handleBackspace = function handleBackspace(event) {
     event.preventDefault();
     var start = caret.start(this.input);
     var value = this.props.value;
@@ -132,8 +151,9 @@ var TimeInput = CreateReactClass({
     }
     if (value.charAt(start - 1) === ':') start--;
     this.onChange(value, start);
-  },
-  handleForwardSpace: function handleForwardSpace(event) {
+  };
+
+  TimeInput.prototype.handleForwardSpace = function handleForwardSpace(event) {
     event.preventDefault();
     var start = caret.start(this.input);
     var value = this.props.value;
@@ -155,8 +175,9 @@ var TimeInput = CreateReactClass({
     }
     if (value.charAt(start) === ':') start++;
     this.onChange(value, start);
-  },
-  handleKeyDown: function handleKeyDown(event) {
+  };
+
+  TimeInput.prototype.handleKeyDown = function handleKeyDown(event) {
     switch (event.which) {
       case 9:
         // Tab
@@ -177,8 +198,9 @@ var TimeInput = CreateReactClass({
       default:
         break;
     }
-  },
-  handleChange: function handleChange(event) {
+  };
+
+  TimeInput.prototype.handleChange = function handleChange(event) {
     var value = this.props.value;
     var newValue = this.input.value;
     var diff = newValue.length - value.length;
@@ -223,11 +245,14 @@ var TimeInput = CreateReactClass({
       var caretIndex = this.props.value.length - (newValue.length - end);
       if (this.mounted) this.setState({ caretIndex: caretIndex });
     }
-  },
-  onChange: function onChange(str, caretIndex) {
+  };
+
+  TimeInput.prototype.onChange = function onChange(str, caretIndex) {
     if (this.props.onChange) this.props.onChange(this.format(str));
     if (this.mounted && typeof caretIndex === 'number') this.setState({ caretIndex: caretIndex });
-  }
-});
+  };
+
+  return TimeInput;
+}(Component);
 
 export default TimeInput;
