@@ -62,7 +62,8 @@ var TimeInput = function (_Component) {
       value: this.format(this.props.value),
       onChange: this.handleChange,
       onBlur: this.handleBlur,
-      onKeyDown: this.handleKeyDown
+      onKeyDown: this.handleKeyDown,
+      disabled: this.props.disabled
     });
   };
 

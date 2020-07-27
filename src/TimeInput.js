@@ -48,6 +48,7 @@ class TimeInput extends Component {
         onChange={this.handleChange}
         onBlur={this.handleBlur}
         onKeyDown={this.handleKeyDown}
+        disabled={this.props.disabled}
       />
     );
   }
